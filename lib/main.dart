@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:goktasgui/components/controller.dart';
 import 'package:goktasgui/components/mapping.dart';
+import 'package:goktasgui/components/senario.dart';
 import 'package:universal_mqtt_client/universal_mqtt_client.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:goktasgui/components/constants.dart';
@@ -163,7 +164,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       subTitle: "Harita",
                       contentData: MappingWidget(),
                       widthSize: MediaQuery.of(context).size.width / 3,
-                      heightSize: MediaQuery.of(context).size.height / 2 + 40,
+                      heightSize: MediaQuery.of(context).size.height / 3 + 20,
+                    ),
+                    DataComponent(
+                      subTitle: "Senaryo",
+                      contentData: EntrySenario(),
+                      widthSize: MediaQuery.of(context).size.width / 3,
+                      heightSize: MediaQuery.of(context).size.height / 6,
                     ),
                     DataComponent(
                       subTitle: "Araç Durumu",
