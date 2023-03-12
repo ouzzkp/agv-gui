@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:goktasgui/components/controller.dart';
 import 'package:goktasgui/components/mapping.dart';
 import 'package:universal_mqtt_client/universal_mqtt_client.dart';
@@ -37,6 +38,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var _focusNode = FocusNode();
   String _timeString;
   @override
   void initState() {
@@ -56,6 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String _formatDateTime(DateTime dateTime) {
     return "${dateTime.hour % 12}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')} ${dateTime.hour < 12 ? '' : ''}";
   }
+
+  int keydirection = 1;
 
   @override
   Widget build(BuildContext context) {

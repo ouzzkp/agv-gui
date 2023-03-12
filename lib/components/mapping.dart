@@ -60,8 +60,21 @@ class _MappingWidgetState extends State<MappingWidget> {
     final subscription =
         client.handleString('mapping', MqttQos.atLeastOnce).listen((message) {
       //print(message);
-      Map<String, dynamic> parsedJson = jsonDecode(message);
+      //Map<String, dynamic> parsedJson = jsonDecode(message);
       //print(parsedJson);
+      List<double> xList = []; // x pozisyonları
+      List<double> yList = []; // y pozsiyonları
+      Map<String, dynamic> jsonMap = jsonDecode(message); 
+      List<dynamic> nodes = jsonMap['nodes']; //Json içindeki nodes array parse edilmesi
+      for (dynamic node in nodes) { 
+        String nodeId = node['id'];
+        List<dynamic> pos = node['pos']; // her bir node içindeki pozisyon değerlerinin parse edilmesi
+        double x = pos[0]['x'];
+        double y = pos[0]['y'];
+        xList.add(x);
+        yList.add(y);
+      }
+       /*
       List<String> x = (parsedJson['nodes'] as Map<String, dynamic>)
           .values
           .map((e) => e['position']['x'].toString())
@@ -69,11 +82,11 @@ class _MappingWidgetState extends State<MappingWidget> {
       List<String> y = (parsedJson['nodes'] as Map<String, dynamic>)
           .values
           .map((e) => e['position']['y'].toString())
-          .toList();
+          .toList();*/
       setState(() {
         points.clear();
-        for (int i = 0; i < x.length; i++) {
-          points.add(Offset(double.parse(x[i]), double.parse(y[i])));
+        for (int i = 0; i < xList.length; i++) {
+          points.add(Offset(xList[i], yList[i]));
         }
       });
     });

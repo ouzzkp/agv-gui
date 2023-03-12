@@ -7,6 +7,8 @@ class Constant {
   static const Color mainGreen = Color(0xFFE8E120);
   static const Color mainGrey = Color(0xFF282828);
   static const Color directionGrey = Color(0xFF727272);
+  static const Color boxShadowRight = Color.fromARGB(255, 63, 63, 63);
+  static const Color boxShadowLeft = Color(0xFF969696);
 }
 
 class DataComponent extends StatelessWidget {
