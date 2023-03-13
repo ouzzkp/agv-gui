@@ -3,9 +3,9 @@ import 'dart:html';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:goktasgui/components/controller.dart';
+import 'package:goktasgui/components/mapping.dart';
 import 'package:universal_mqtt_client/universal_mqtt_client.dart';
 import 'package:mqtt_client/mqtt_client.dart';
-import 'package:goktasgui/components/constants.dart';
 import 'package:goktasgui/components/constants.dart';
 
 class EntrySenario extends StatefulWidget {
@@ -70,10 +70,7 @@ class _EntrySenarioState extends State<EntrySenario> {
         ),
         SizedBox(width: 10),
         ElevatedButton(
-          onPressed: () {
-            _sendSenario();
-            //  print(_enteredText);
-          },
+          onPressed: mappingState ? null : _sendSenario,
           child: SizedBox(
               height: 50,
               child: Center(

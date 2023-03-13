@@ -5,10 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:goktasgui/components/controller.dart';
 import 'package:goktasgui/components/mapping.dart';
-import 'package:goktasgui/components/senario.dart';
+
 import 'package:universal_mqtt_client/universal_mqtt_client.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:goktasgui/components/constants.dart';
+import 'package:goktasgui/components/mapping.dart';
+import 'package:goktasgui/components/senario.dart';
+
+import 'components/emergency.dart';
+
+var haritaBaslik;
 
 void main() async {
   runApp(const MyApp());
@@ -19,6 +25,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (mappingState) {
+      haritaBaslik = "Harita Oluşturuluyor...";
+    } else {
+      haritaBaslik = "Harita oluşturuldu";
+    }
     return MaterialApp(
       title: 'Goktas AGV Control Panel',
       theme: ThemeData(
@@ -113,16 +124,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           // ignore: prefer_const_literals_to_create_immutables
                           children: [
                             DataComponent(
-                              contentData: DataComponentContent(text: "55 Kg"),
-                              subTitle: "Yük Bilgileri",
-                              widthSize: MediaQuery.of(context).size.width / 6,
-                              heightSize:
-                                  MediaQuery.of(context).size.height / 6,
-                            ),
-                            DataComponent(
-                              contentData: DataComponentContent(text: "25 C"),
-                              subTitle: "Sıcaklık",
-                              widthSize: MediaQuery.of(context).size.width / 6,
+                              contentData: EmergencyStop(),
+                              subTitle: "Acil Durdurma Butonu",
+                              widthSize:
+                                  MediaQuery.of(context).size.width / 3 + 20,
                               heightSize:
                                   MediaQuery.of(context).size.height / 6,
                             ),
@@ -161,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     DataComponent(
-                      subTitle: "Harita",
+                      subTitle: haritaBaslik,
                       contentData: MappingWidget(),
                       widthSize: MediaQuery.of(context).size.width / 3,
                       heightSize: MediaQuery.of(context).size.height / 3 + 20,

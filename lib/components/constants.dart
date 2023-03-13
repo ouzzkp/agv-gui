@@ -2,6 +2,16 @@ import 'package:flutter/material.dart';
 
 import 'mapping.dart';
 
+Map<int, bool> isPressedMap = {
+  0: false,
+  1: false,
+  2: false,
+  3: false,
+};
+int x = 0;
+int y = 0;
+final String pubTopic = "goktasagv";
+
 class Constant {
   // Colors
   static const Color mainGreen = Color(0xFFE8E120);

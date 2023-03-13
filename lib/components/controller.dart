@@ -11,8 +11,7 @@ import 'package:goktasgui/components/constants.dart';
 import 'package:goktasgui/components/constants.dart';
 
 class Controller extends StatefulWidget {
-  final int keyEvent;
-  const Controller({super.key, required this.keyEvent});
+  const Controller({super.key});
 
   @override
   State<Controller> createState() => _ControllerState();
@@ -42,96 +41,65 @@ class _ControllerState extends State<Controller> {
     //client.disconnect();
   }
 
-  Timer? _timerLeft;
-  Timer? _timerForward;
-  Timer? _timerBackward;
-  Timer? _timerRight;
-
   Color _buttonColor = Colors.red;
   bool _isButtonOn = false;
-  final String pubTopic = "goktasagv";
-  int x = 0;
-  int y = 0;
+
   int a = 0;
   int b = 0;
 
   String text = "No Sended Message";
 
-  Map<int, bool> isPressedMap = {
-    0: false,
-    1: false,
-    2: false,
-    3: false,
-  };
   void _moveForward() {
     if (_isButtonOn) {
-      _timerBackward?.cancel(); // önceki zamanlayıcıyı iptal et
-      _timerForward =
-          Timer.periodic(const Duration(milliseconds: 500), (timer) {
-        setState(() {
-          y++;
-          client.publishString(pubTopic, 'posy: ${y.toString()} move forward',
-              MqttQos.atLeastOnce);
-          print('pos(x,y): (${x.toString()},${y.toString()}) | MOVE FORWARD');
-        });
+      setState(() {
+        y++;
+        client.publishString(pubTopic, 'posy: ${y.toString()} move forward',
+            MqttQos.atLeastOnce);
+        print('pos(x,y): (${x.toString()},${y.toString()}) | MOVE FORWARD');
       });
     }
   }
 
   void _moveBackward() {
     if (_isButtonOn) {
-      _timerForward?.cancel(); // önceki zamanlayıcıyı iptal et
-      _timerBackward =
-          Timer.periodic(const Duration(milliseconds: 500), (timer) {
-        setState(() {
-          y--;
-          client.publishString(pubTopic, 'posy: ${y.toString()} move backward',
-              MqttQos.atLeastOnce);
-          print('pos(x,y): (${x.toString()},${y.toString()}) | MOVE BACKWARD');
-        });
+      setState(() {
+        y--;
+        client.publishString(pubTopic, 'posy: ${y.toString()} move backward',
+            MqttQos.atLeastOnce);
+        print('pos(x,y): (${x.toString()},${y.toString()}) | MOVE BACKWARD');
       });
     }
   }
 
   void _moveRight() {
     if (_isButtonOn) {
-      _timerLeft?.cancel(); // önceki zamanlayıcıyı iptal et
-      _timerRight = Timer.periodic(const Duration(milliseconds: 500), (timer) {
-        setState(() {
-          x++;
-          client.publishString(pubTopic, 'posx: ${x.toString()} move right',
-              MqttQos.atLeastOnce);
-          print('pos(x,y): (${x.toString()},${y.toString()}) | MOVE RIGHT');
-        });
+      setState(() {
+        x++;
+        client.publishString(
+            pubTopic, 'posx: ${x.toString()} move right', MqttQos.atLeastOnce);
+        print('pos(x,y): (${x.toString()},${y.toString()}) | MOVE RIGHT');
       });
     }
   }
 
   void _moveLeft() {
     if (_isButtonOn) {
-      _timerRight?.cancel(); // önceki zamanlayıcıyı iptal et
-
-      _timerLeft = Timer.periodic(const Duration(milliseconds: 500), (timer) {
-        setState(() {
-          x--;
-          client.publishString(
-              pubTopic, 'posx: ${x.toString()} move left', MqttQos.atLeastOnce);
-          print('pos(x,y): (${x.toString()},${y.toString()}) | MOVE LEFT');
-        });
+      setState(() {
+        x--;
+        print('pos(x,y): (${x.toString()},${y.toString()}) | MOVE LEFT');
       });
+      client.publishString(
+          pubTopic, 'posx: ${x.toString()} move left', MqttQos.atLeastOnce);
     }
   }
 
   void _stopEngine() {
-    _timerRight?.cancel();
-    _timerLeft?.cancel();
-    _timerForward?.cancel();
-    _timerBackward?.cancel();
     setState(() {
       client.publishString(
           pubTopic,
           'pos(x,y): (${x.toString()},${y.toString()}), engine stopped',
           MqttQos.atLeastOnce);
+      print('pos(x,y): (${x.toString()},${y.toString()}) | ENGINE STOPPED');
     });
   }
 
@@ -168,11 +136,17 @@ class _ControllerState extends State<Controller> {
       decoration: BoxDecoration(
         color: isPressed
             ? Colors.grey
-            : Constant.directionGrey, // arka plan rengi değiştirildi
+            : _isButtonOn
+                ? Constant.directionGrey
+                : Colors.black12, // arka plan rengi değiştirildi
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: isPressed ? Colors.white : Constant.boxShadowLeft,
+            color: isPressed
+                ? Colors.white
+                : _isButtonOn
+                    ? Constant.boxShadowLeft
+                    : Colors.transparent,
             offset: isPressed ? Offset(3, 3) : Offset(-3, -3),
             blurRadius: 8,
             spreadRadius: 2,
@@ -180,30 +154,39 @@ class _ControllerState extends State<Controller> {
         ],
       ),
       child: Center(
-        child: IconButton(
-          onPressed: () => {
-            setState(() {
-              if (_isButtonOn) {
-                isPressedMap[direction] = !isPressed;
-                if (isPressedMap[direction] == true) {
-                  _sender(direction);
-                }
-                if (isPressedMap[direction] == false) {
-                  _sender(911);
-                }
-              }
-            }),
-          },
-          icon: Image.asset(imagePath),
-        ),
-      ),
+          child: GestureDetector(
+        onTapDown: (details) {
+          setState(() {
+            if (_isButtonOn) {
+              isPressedMap[direction] = true;
+              _sender(direction);
+            }
+          });
+        },
+        onTapUp: (details) {
+          setState(() {
+            if (_isButtonOn) {
+              isPressedMap[direction] = false;
+              _sender(911);
+            }
+          });
+        },
+        onTapCancel: () {
+          setState(() {
+            if (_isButtonOn) {
+              isPressedMap[direction] = false;
+              _sender(911);
+            }
+          });
+        },
+        child: Image.asset(imagePath, fit: BoxFit.cover),
+      )),
     );
   }
 
   Widget controllerButton() {
     return Container(
-      height: 70,
-      width: 70,
+      width: MediaQuery.of(context).size.width / 20,
       child: NeumorphicButton(
         onPressed: () {
           setState(() {
@@ -259,35 +242,36 @@ class _ControllerState extends State<Controller> {
             ),
             directions(
               direction: 0,
-              imagePath: "assets/images/forward.png",
+              imagePath: _isButtonOn
+                  ? "assets/images/forward.png"
+                  : "assets/images/forward_disable.png",
             ),
             const SizedBox(
               width: 15,
             ),
             directions(
               direction: 1,
-              imagePath: "assets/images/back.png",
+              imagePath: _isButtonOn
+                  ? "assets/images/back.png"
+                  : "assets/images/back_disable.png",
             ),
             const SizedBox(
               width: 15,
             ),
             directions(
               direction: 2,
-              imagePath: "assets/images/left.png",
+              imagePath: _isButtonOn
+                  ? "assets/images/left.png"
+                  : "assets/images/left_disable.png",
             ),
             const SizedBox(
               width: 15,
             ),
             directions(
               direction: 3,
-              imagePath: "assets/images/right.png",
-            ),
-            const SizedBox(
-              width: 15,
-            ),
-            directions(
-              direction: 911,
-              imagePath: "assets/images/emergency.png",
+              imagePath: _isButtonOn
+                  ? "assets/images/right.png"
+                  : "assets/images/right_disable.png",
             ),
           ],
         ),

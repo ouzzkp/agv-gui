@@ -6,7 +6,8 @@ import 'package:goktasgui/components/controller.dart';
 import 'package:universal_mqtt_client/universal_mqtt_client.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:goktasgui/components/constants.dart';
-import 'package:goktasgui/components/constants.dart';
+
+var mappingState = true;
 
 class MyCustomPainter extends CustomPainter {
   final List<Offset> points;
@@ -64,17 +65,19 @@ class _MappingWidgetState extends State<MappingWidget> {
       //print(parsedJson);
       List<double> xList = []; // x pozisyonları
       List<double> yList = []; // y pozsiyonları
-      Map<String, dynamic> jsonMap = jsonDecode(message); 
-      List<dynamic> nodes = jsonMap['nodes']; //Json içindeki nodes array parse edilmesi
-      for (dynamic node in nodes) { 
+      Map<String, dynamic> jsonMap = jsonDecode(message);
+      List<dynamic> nodes =
+          jsonMap['nodes']; //Json içindeki nodes array parse edilmesi
+      for (dynamic node in nodes) {
         String nodeId = node['id'];
-        List<dynamic> pos = node['pos']; // her bir node içindeki pozisyon değerlerinin parse edilmesi
+        List<dynamic> pos = node[
+            'pos']; // her bir node içindeki pozisyon değerlerinin parse edilmesi
         double x = pos[0]['x'];
         double y = pos[0]['y'];
         xList.add(x);
         yList.add(y);
       }
-       /*
+      /*
       List<String> x = (parsedJson['nodes'] as Map<String, dynamic>)
           .values
           .map((e) => e['position']['x'].toString())
