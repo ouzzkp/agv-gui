@@ -187,7 +187,7 @@ class _ControllerState extends State<Controller> {
   Widget controllerButton() {
     return Container(
       width: MediaQuery.of(context).size.width / 20,
-      child: NeumorphicButton(
+      child: ElevatedButton(
         onPressed: () {
           setState(() {
             _isButtonOn = !_isButtonOn;
@@ -195,11 +195,8 @@ class _ControllerState extends State<Controller> {
             print("Manuel Kontrol Durumu: $_isButtonOn");
           });
         },
-        style: NeumorphicStyle(
-          color: _buttonColor,
-          boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(10)),
-          depth: 10,
-          intensity: 0.5,
+        style: ElevatedButton.styleFrom(
+          primary: _buttonColor, // Düğmenin arkaplan rengi
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

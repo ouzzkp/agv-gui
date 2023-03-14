@@ -21,19 +21,25 @@ class Constant {
   static const Color boxShadowLeft = Color(0xFF969696);
 }
 
-class DataComponent extends StatelessWidget {
+class DataComponent extends StatefulWidget {
   final double widthSize;
   final double heightSize;
   final String subTitle;
   final Widget contentData;
 
-  const DataComponent(
-      {super.key,
-      required this.subTitle,
-      required this.contentData,
-      required this.widthSize,
-      required this.heightSize});
+  const DataComponent({
+    Key? key,
+    required this.subTitle,
+    required this.contentData,
+    required this.widthSize,
+    required this.heightSize,
+  }) : super(key: key);
 
+  @override
+  _DataComponentState createState() => _DataComponentState();
+}
+
+class _DataComponentState extends State<DataComponent> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -43,15 +49,15 @@ class DataComponent extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           color: Color.fromRGBO(40, 40, 40, 1.0),
         ),
-        height: heightSize,
-        width: widthSize,
+        height: widget.heightSize,
+        width: widget.widthSize,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
                 Text(
-                  subTitle,
+                  widget.subTitle,
                   style: const TextStyle(
                       color: Color.fromRGBO(232, 225, 32, 1.0),
                       fontSize: 30,
@@ -60,7 +66,7 @@ class DataComponent extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 16.0),
-                  child: contentData,
+                  child: widget.contentData,
                 ),
               ],
             ),

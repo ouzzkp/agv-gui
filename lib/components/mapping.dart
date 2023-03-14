@@ -7,7 +7,8 @@ import 'package:universal_mqtt_client/universal_mqtt_client.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:goktasgui/components/constants.dart';
 
-var mappingState = true;
+var mappingStateTopic = "mappingState";
+bool mappingState = true;
 
 class MyCustomPainter extends CustomPainter {
   final List<Offset> points;
@@ -95,13 +96,51 @@ class _MappingWidgetState extends State<MappingWidget> {
     });
   }
 
+  void _startTheMapping() {
+    setState(() {
+      mappingState == true;
+      client.publishString(
+          mappingStateTopic, 'start the mapping', MqttQos.atLeastOnce);
+    });
+  }
+
+  void _stopTheMapping() {
+    setState(() {
+      mappingState == false;
+      client.publishString(
+          mappingStateTopic, 'stop the mapping', MqttQos.atLeastOnce);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 500,
       height: 100,
-      child: CustomPaint(
-        painter: MyCustomPainter(points),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                  onPressed: () {
+                    _startTheMapping();
+                  },
+                  child: Text("Başla!")),
+              SizedBox(
+                width: 20,
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    _stopTheMapping();
+                  },
+                  child: Text("Bitir!")),
+            ],
+          ),
+          CustomPaint(
+            painter: MyCustomPainter(points),
+          ),
+        ],
       ),
     );
   }
