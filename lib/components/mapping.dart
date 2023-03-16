@@ -96,46 +96,14 @@ class _MappingWidgetState extends State<MappingWidget> {
     });
   }
 
-  void _startTheMapping() {
-    setState(() {
-      mappingState == true;
-      client.publishString(
-          mappingStateTopic, 'start the mapping', MqttQos.atLeastOnce);
-    });
-  }
-
-  void _stopTheMapping() {
-    setState(() {
-      mappingState == false;
-      client.publishString(
-          mappingStateTopic, 'stop the mapping', MqttQos.atLeastOnce);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 500,
-      height: 100,
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                  onPressed: () {
-                    _startTheMapping();
-                  },
-                  child: Text("Başla!")),
-              SizedBox(
-                width: 20,
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    _stopTheMapping();
-                  },
-                  child: Text("Bitir!")),
-            ],
+            children: [],
           ),
           CustomPaint(
             painter: MyCustomPainter(points),

@@ -95,11 +95,30 @@ class _MyHomePageState extends State<MyHomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                MainButtons(),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
                 Row(
                   children: [
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Row(
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: [
+                            DataComponent(
+                              contentData: EmergencyStop(),
+                              subTitle: "Acil Durdurma Butonu",
+                              widthSize:
+                                  MediaQuery.of(context).size.width / 3 + 20,
+                              heightSize:
+                                  MediaQuery.of(context).size.height / 6,
+                            ),
+                          ],
+                        ),
                         Row(
                           children: [
                             DataComponent(
@@ -119,19 +138,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           ],
                         ),
                         Row(
-                          // ignore: prefer_const_literals_to_create_immutables
-                          children: [
-                            DataComponent(
-                              contentData: EmergencyStop(),
-                              subTitle: "Acil Durdurma Butonu",
-                              widthSize:
-                                  MediaQuery.of(context).size.width / 3 + 20,
-                              heightSize:
-                                  MediaQuery.of(context).size.height / 6,
-                            ),
-                          ],
-                        ),
-                        Row(
                           children: [
                             DataComponent(
                               subTitle: "Manuel Kontrol",
@@ -145,15 +151,26 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         Row(
                           children: [
-                            DataComponent(
-                              subTitle: "Geçen Süre",
-                              contentData:
-                                  DataComponentContent(text: _timeString),
-                              widthSize:
-                                  MediaQuery.of(context).size.width / 3 + 20,
-                              heightSize:
-                                  MediaQuery.of(context).size.height / 6,
-                            ),
+                            Row(children: [
+                              DataComponent(
+                                subTitle: "Geçen Süre",
+                                contentData:
+                                    DataComponentContent(text: _timeString),
+                                widthSize:
+                                    MediaQuery.of(context).size.width / 6,
+                                heightSize:
+                                    MediaQuery.of(context).size.height / 6,
+                              ),
+                              DataComponent(
+                                subTitle: "Araç Durumu",
+                                contentData: DataComponentContent(
+                                    text: "Araç İstirahatte"),
+                                widthSize:
+                                    MediaQuery.of(context).size.width / 6,
+                                heightSize:
+                                    MediaQuery.of(context).size.height / 6,
+                              ),
+                            ]),
                           ],
                         ),
                       ],
@@ -167,18 +184,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       subTitle: "Harita",
                       contentData: MappingWidget(),
                       widthSize: MediaQuery.of(context).size.width / 3,
-                      heightSize: MediaQuery.of(context).size.height / 3 + 20,
+                      heightSize: MediaQuery.of(context).size.height / 2 + 40,
                     ),
                     DataComponent(
                       subTitle: "Senaryo",
                       contentData: EntrySenario(),
-                      widthSize: MediaQuery.of(context).size.width / 3,
-                      heightSize: MediaQuery.of(context).size.height / 6,
-                    ),
-                    DataComponent(
-                      subTitle: "Araç Durumu",
-                      contentData:
-                          DataComponentContent(text: "Araç İstirahatte"),
                       widthSize: MediaQuery.of(context).size.width / 3,
                       heightSize: MediaQuery.of(context).size.height / 6,
                     ),

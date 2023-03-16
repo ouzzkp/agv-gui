@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mqtt_client/mqtt_client.dart';
+import 'package:universal_mqtt_client/universal_mqtt_client.dart';
 
 import 'mapping.dart';
 
@@ -91,3 +93,77 @@ final points = [
   Offset(50, 70),
   Offset(80, 90),
 ];
+
+class MainButtons extends StatefulWidget {
+  const MainButtons({super.key});
+
+  @override
+  State<MainButtons> createState() => _MainButtonsState();
+}
+
+class _MainButtonsState extends State<MainButtons> {
+  final client = UniversalMqttClient(
+    broker: Uri.parse('ws://localhost:8080'),
+    autoReconnect: true,
+  );
+
+  @override
+  void initState() {
+    client.connect();
+    super.initState();
+  }
+
+  void _startTheMapping() {
+    setState(() {
+      mappingState == true;
+      client.publishString(
+          mappingStateTopic, 'start the mapping', MqttQos.atLeastOnce);
+    });
+  }
+
+  void _stopTheMapping() {
+    setState(() {
+      mappingState == false;
+      client.publishString(
+          mappingStateTopic, 'stop the mapping', MqttQos.atLeastOnce);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Color.fromRGBO(40, 40, 40, 1.0),
+        ),
+        height: MediaQuery.of(context).size.height / 12,
+        width: MediaQuery.of(context).size.width / 1.5 + 40,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      _startTheMapping();
+                    },
+                    child: Text("Başla!")),
+                SizedBox(
+                  width: 20,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      _stopTheMapping();
+                    },
+                    child: Text("Bitir!")),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
